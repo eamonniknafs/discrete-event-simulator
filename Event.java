@@ -14,14 +14,14 @@ public class Event implements Comparable<Event> {
         this.id = id;
         this.ts = ts;
         this.arr = ts;
-        System.out.println(this);
+        System.out.print(this+"\n");
     }
 
     public Event Start(Double ts) {
         this.ts = ts;
         this.status = 1;
         this.start = ts;
-        System.out.println(this);
+        System.out.print(this+ "\n");
         return this;
     }
 
@@ -29,7 +29,7 @@ public class Event implements Comparable<Event> {
         this.ts = ts;
         this.status = 2;
         this.done = ts;
-        System.out.println(this);
+        System.out.print(this+ "\n");
         return this;
     }
 

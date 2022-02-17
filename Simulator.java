@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.List;
 import java.util.PriorityQueue;
 
 public class Simulator {
@@ -11,31 +10,38 @@ public class Simulator {
         ArrayList<Integer> qlen = new ArrayList<Integer>();
         Double running_time = 0.0;
         int running = -1;
+        Event temp = null;
         while (curr_time < time) {
             Event e = timeline.poll();
+            if (temp != null) {
+                timeline.add(temp);
+                temp = null;
+            }
             qlen.add(timeline.size());
             if (e == null) {
-                Double exp = Exp.getExp(lambda);
-                timeline.add(new Event(id, curr_time + exp, T_s));
-                curr_time += exp;
+                timeline.add(new Event(id, curr_time, T_s));
                 id++;
             } else {
                 if (e.getStatus() == 0 && running == -1) {
-                    Double exp = Exp.getExp(lambda);
                     running = e.getId();
-                    timeline.add(e.Start(curr_time + exp));
-                    curr_time += exp;
-                    exp = Exp.getExp(lambda);
+                    timeline.add(e.Start(curr_time));
+                    Double exp = Exp.getExp(lambda);
                     if (curr_time + exp < time) {
                         timeline.add(new Event(id, curr_time + exp, T_s));
                         curr_time += exp;
                         id++;
+                    }
+                    else{
+                        break;
                     }
                 } else if (e.getStatus() == 1 && running == e.getId()) {
                     if (curr_time + T_s < time) {
                         timeline.add(e.Done(curr_time + T_s));
                         curr_time += T_s;
                         running = -1;
+                    }
+                    else{
+                        break;
                     }
                 } else if (e.getStatus() == 2) {
                     Double exp = Exp.getExp(lambda);
@@ -46,6 +52,11 @@ public class Simulator {
                         curr_time += exp;
                         id++;
                     }
+                    else{
+                        break;
+                    }
+                } else {
+                    temp = e;
                 }
             }
         }
