@@ -12,18 +12,20 @@ public class Request implements Comparable<Request> {
         this.id = id;
         this.arr = ts;
         this.status = 0;
+        System.out.println(this.toString());
     }
 
-    public Request start(Double ts) {
+    public void start(Double ts) {
         this.status = 1;
         this.start = ts;
-        return this;
+        System.out.println(this.toString());
+
     }
 
-    public Request finish(Double ts) {
+    public void finish(Double ts) {
         this.status = 2;
         this.done = ts;
-        return this;
+        System.out.println(this.toString());
     }
 
     /* timestamp getter */
@@ -38,8 +40,8 @@ public class Request implements Comparable<Request> {
             default:
                 return null;
         }
-    }  
-    
+    }
+
     @Override
     public int compareTo(Request rq) {
         return this.getTimestamp().compareTo(rq.getTimestamp());
@@ -90,6 +92,6 @@ public class Request implements Comparable<Request> {
 
     @Override
     public String toString() {
-        return "R" + id + " " + getStatusString()+": " + getTimestamp();
+        return "R" + id + " " + getStatusString() + ": " + getTimestamp();
     }
 }

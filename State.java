@@ -17,7 +17,7 @@ public class State {
     Double lambda;
     Double T_s;
 
-    void initiateTimeline(){
+    void initiateTimeline() {
         timeline = new LinkedList<Event>();
         timeline.add(new Event("BIRTH", 0.0));
         timeline.add(new Event("MONITOR", 0.0));
