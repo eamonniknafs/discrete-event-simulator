@@ -1,9 +1,9 @@
 public class Event {
     String type;
-    // Double time;
+    Double time;
 
-    public Event(String type/*, Double time */) {
+    public Event(String type, Double time) {
         this.type = type;
-        // this.time = time;
+        this.time = time;
     }
 }
