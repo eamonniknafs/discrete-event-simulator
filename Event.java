@@ -4,18 +4,23 @@ public class Event implements Comparable<Event> {
     private int id;
     // 0 = ARR, 1 = START, 2 = DONE
     private int status;
+    private Double arr;
+    private Double start;
+    private Double done;
 
     /* Verbose constructor */
     public Event(int id, Double ts, Double T_s) {
         super();
         this.id = id;
         this.ts = ts;
+        this.arr = ts;
         System.out.println(this);
     }
 
     public Event Start(Double ts) {
         this.ts = ts;
         this.status = 1;
+        this.start = ts;
         System.out.println(this);
         return this;
     }
@@ -23,6 +28,7 @@ public class Event implements Comparable<Event> {
     public Event Done(Double ts) {
         this.ts = ts;
         this.status = 2;
+        this.done = ts;
         System.out.println(this);
         return this;
     }
@@ -42,7 +48,22 @@ public class Event implements Comparable<Event> {
         return this.id;
     }
 
-    /* status getter */
+    /* arr getter */
+    public Double getArr() {
+        return this.arr;
+    }
+
+    /* start getter */
+    public Double getStart() {
+        return this.start;
+    }
+
+    /* done getter */
+    public Double getDone() {
+        return this.done;
+    }
+
+    /* Status getter */
     public int getStatus() {
         return this.status;
     }

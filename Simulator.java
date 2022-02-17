@@ -1,34 +1,59 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.PriorityQueue;
 
-public class Simulator{
-    static void simulate(double time, double lambda, double T_s){
+public class Simulator {
+    static void simulate(double time, double lambda, double T_s) {
         PriorityQueue<Event> timeline = new PriorityQueue<Event>();
         Double curr_time = 0.0;
         int id = 0;
-        while (curr_time < time){
+        ArrayList<Double> tresp = new ArrayList<Double>();
+        ArrayList<Integer> qlen = new ArrayList<Integer>();
+        Double running_time = 0.0;
+        int running = -1;
+        while (curr_time < time) {
             Event e = timeline.poll();
-            if (e == null){
-                timeline.add(new Event(id, curr_time, T_s));
-                curr_time += Exp.getExp(lambda);
+            qlen.add(timeline.size());
+            if (e == null) {
+                Double exp = Exp.getExp(lambda);
+                timeline.add(new Event(id, curr_time + exp, T_s));
+                curr_time += exp;
                 id++;
             } else {
-                if (e.getStatus() == 0){
+                if (e.getStatus() == 0 && running == -1) {
                     Double exp = Exp.getExp(lambda);
-                    timeline.add(e.Start(curr_time+exp));
+                    running = e.getId();
+                    timeline.add(e.Start(curr_time + exp));
                     curr_time += exp;
-                } else if (e.getStatus() == 1){
-                    timeline.add(e.Done(curr_time+T_s));
-                    curr_time += T_s;
-                } else if (e.getStatus() == 2){
-                    timeline.add(new Event(id, curr_time, T_s));
-                    id++;
-                } else {
-                    System.out.println("Error: Unknown event status");
+                    exp = Exp.getExp(lambda);
+                    if (curr_time + exp < time) {
+                        timeline.add(new Event(id, curr_time + exp, T_s));
+                        curr_time += exp;
+                        id++;
+                    }
+                } else if (e.getStatus() == 1 && running == e.getId()) {
+                    if (curr_time + T_s < time) {
+                        timeline.add(e.Done(curr_time + T_s));
+                        curr_time += T_s;
+                        running = -1;
+                    }
+                } else if (e.getStatus() == 2) {
+                    Double exp = Exp.getExp(lambda);
+                    if (curr_time + exp < time) {
+                        running_time += e.getDone() - e.getStart();
+                        tresp.add(e.getDone() - e.getArr());
+                        timeline.add(new Event(id, curr_time + exp, T_s));
+                        curr_time += exp;
+                        id++;
+                    }
                 }
             }
         }
+        System.out.println("UTIL: "+running_time/time);
+        System.out.println("QLEN: "+qlen.stream().mapToDouble(d -> d).average().orElse(0.0));
+        System.out.println("TRESP: "+tresp.stream().mapToDouble(d -> d).average().orElse(0.0));
     }
- 
+
     public static void main(String[] args) {
         double T = Double.parseDouble(args[0]);
         double lambda = Double.parseDouble(args[1]);
