@@ -1,17 +1,33 @@
+import java.util.LinkedList;
 import java.util.PriorityQueue;
+import java.util.Queue;
 
 public class State {
-    PriorityQueue<Request> timeline;
+    PriorityQueue<Request> requestQueue;
+    Queue<Event> timeline;
+
     int tot_qu_len;
     Double tot_rq_time;
     Double busy_time;
+
     int tot_rq_num;
 
-    void initiateState() {
-        timeline = new PriorityQueue<Request>();
+    Double lambda;
+    Double T_s;
+
+    void initiateTimeline(){
+        timeline = new LinkedList<Event>();
+        timeline.add(new Event("BIRTH", 0.0));
+        timeline.add(new Event("MONITOR", 0.0));
+    }
+
+    void initiateState(Double lambda, Double T_s) {
+        requestQueue = new PriorityQueue<Request>();
         tot_qu_len = 0;
         tot_rq_time = 0.0;
         busy_time = 0.0;
         tot_rq_num = 0;
+        this.lambda = lambda;
+        this.T_s = T_s;
     }
 }
