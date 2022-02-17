@@ -14,13 +14,13 @@ public class Request implements Comparable<Request> {
         this.status = 0;
     }
 
-    public Request Start(Double ts) {
+    public Request start(Double ts) {
         this.status = 1;
         this.start = ts;
         return this;
     }
 
-    public Request Finish(Double ts) {
+    public Request finish(Double ts) {
         this.status = 2;
         this.done = ts;
         return this;
