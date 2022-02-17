@@ -1,10 +1,8 @@
-import java.util.LinkedList;
 import java.util.PriorityQueue;
-import java.util.Queue;
 
 public class State {
     PriorityQueue<Request> requestQueue;
-    Queue<Event> timeline;
+    PriorityQueue<Event> timeline;
 
     int tot_qu_len;
     Double tot_rq_time;
@@ -18,7 +16,7 @@ public class State {
     Double T_s;
 
     void initiateTimeline() {
-        timeline = new LinkedList<Event>();
+        timeline = new PriorityQueue<Event>();
         timeline.add(new Event("BIRTH", 0.0));
         timeline.add(new Event("MONITOR", 0.0));
     }

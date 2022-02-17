@@ -20,14 +20,14 @@ public class Controller {
     void executeEvent(Event e, State s) {
         if (e.type.equals("BIRTH")) {
             createAndAddRequest(s, e.time);
-            s.timeline.add(new Event("BIRTH", e.time + Exp.getExp(s.lambda)));
+            s.timeline.add(new Event("BIRTH", e.time + Possian.getPossian(s.lambda)));
             if (s.requestQueue.size() == 1) {
                 s.requestQueue.peek().start(e.time);
                 s.timeline.add(new Event("DEATH", e.time));
             }
         } else if (e.type.equals("MONITOR")) {
             updateStateVariables(s);
-            s.timeline.add(new Event("MONITOR", e.time + s.T_s));
+            s.timeline.add(new Event("MONITOR", e.time + Exp.getExp(s.T_s)));
         } else if (e.type.equals("DEATH")) {
             Request rq = s.requestQueue.poll();
             rq.finish(e.time + s.T_s);
