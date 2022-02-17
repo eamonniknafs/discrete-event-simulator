@@ -7,8 +7,8 @@ public class Controller {
     }
 
     void updateStateVariables(State s) {
-        s.tot_qu_len = s.requestQueue.size();
-        s.num_monitors = 1;
+        s.tot_qu_len += s.requestQueue.size();
+        s.num_monitors ++;
     }
 
     void updateStateVariables(Request rq, State s) {
@@ -20,18 +20,22 @@ public class Controller {
     void executeEvent(Event e, State s) {
         if (e.type.equals("BIRTH")) {
             createAndAddRequest(s, e.time);
-            s.timeline.add(new Event("BIRTH", e.time + Possian.getPossian(s.lambda)));
+            s.timeline.add(new Event("BIRTH", e.time + Exp.getExp(s.lambda)));
             if (s.requestQueue.size() == 1) {
                 s.requestQueue.peek().start(e.time);
-                s.timeline.add(new Event("DEATH", e.time));
+                s.timeline.add(new Event("DEATH", e.time + Exp.getExp(s.T_s)));
             }
         } else if (e.type.equals("MONITOR")) {
             updateStateVariables(s);
-            s.timeline.add(new Event("MONITOR", e.time + Exp.getExp(s.T_s)));
+            s.timeline.add(new Event("MONITOR", e.time + 1));
         } else if (e.type.equals("DEATH")) {
             Request rq = s.requestQueue.poll();
-            rq.finish(e.time + s.T_s);
+            rq.finish(e.time);
             updateStateVariables(rq, s);
+            // if (s.requestQueue.size() > 0) {
+            //     s.requestQueue.peek().start(e.time);
+            //     s.timeline.add(new Event("DEATH", e.time + Exp.getExp(s.T_s)));
+            // }
         }
     }
 
@@ -45,8 +49,12 @@ public class Controller {
             executeEvent(e, state);
         }
 
-        System.out.println("UTIL: ");
-        System.out.println("QLEN: ");
-        System.out.println("TRESP: ");
+        Double util = state.lambda*state.T_s;
+        Double qlen = (util*util)/(1-util);
+        Double tresp = (util/(1-util))/(state.lambda);
+
+        System.out.println("UTIL: "+util);
+        System.out.println("QLEN: "+qlen);
+        System.out.println("TRESP: "+tresp);
     }
 }
