@@ -1,6 +1,4 @@
 public class Request implements Comparable<Request> {
-
-    private Double ts;
     private int id;
     // 0 = ARR, 1 = START, 2 = DONE
     private int status;
@@ -9,38 +7,42 @@ public class Request implements Comparable<Request> {
     private Double done;
 
     /* Verbose constructor */
-    public Request(int id, Double ts, Double T_s) {
+    public Request(int id, Double ts) {
         super();
         this.id = id;
-        this.ts = ts;
         this.arr = ts;
-        System.out.print(this+"\n");
+        this.status = 0;
     }
 
     public Request Start(Double ts) {
-        this.ts = ts;
         this.status = 1;
         this.start = ts;
-        System.out.print(this+ "\n");
         return this;
     }
 
-    public Request Done(Double ts) {
-        this.ts = ts;
+    public Request Finish(Double ts) {
         this.status = 2;
         this.done = ts;
-        System.out.print(this+ "\n");
         return this;
-    }
-
-    @Override
-    public int compareTo(Request rq) {
-        return this.getTimestamp().compareTo(rq.getTimestamp());
     }
 
     /* timestamp getter */
     public Double getTimestamp() {
-        return this.ts;
+        switch (this.status) {
+            case 0:
+                return this.arr;
+            case 1:
+                return this.start;
+            case 2:
+                return this.done;
+            default:
+                return null;
+        }
+    }  
+    
+    @Override
+    public int compareTo(Request rq) {
+        return this.getTimestamp().compareTo(rq.getTimestamp());
     }
 
     /* ID getter */
@@ -88,6 +90,6 @@ public class Request implements Comparable<Request> {
 
     @Override
     public String toString() {
-        return "R" + id + " " + getStatusString()+": " + ts;
+        return "R" + id + " " + getStatusString()+": " + getTimestamp();
     }
 }
